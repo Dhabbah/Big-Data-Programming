@@ -1,0 +1,44 @@
+$ create table petrol (distributer_id STRING, distributer_name STRING, amt_IN STRING, amy_OUT STRING, vol_IN INT, vol_OUT INT, year INT) row format delimited fields terminated by "," stored as textfile;
+
+$ load data local inpath "/home/cloudera/Desktop/ICP4/input/petrol.txt" into table petrol
+
+$ SELECT distributer_name, SUM(vol_OUT) FROM petrol GROUP BY distributer_name;
+
+$ SELECT distributer_id, vol_OUT FROM petrol order by vol_OUT desc limit 10;
+
+$ SELECT distributer_id, vol_OUT FROM petrol order by vol_OUT limit 10;
+
+$ SELECT year, distributer_name, (vol_IN-vol_OUT) FROM petrol where (vol_IN-vol_OUT)>500 ORDER BY distributer_name;
+
+$ create table olympic(athelete STRING,age INT,country STRING,year STRING,closing STRING,sport STRING,gold INT,silver INT,bronze INT,total INT) row format delimited fields terminated by "\t" stored as textfile;
+
+$ load data local inpath "/home/cloudera/Desktop/ICP4/input/olympic_data.csv" into table 
+
+$ select country, SUM(total) from olympic where sport = "Swimming" GROUP BY country;
+
+$ select year, SUM(total) from olympic where country = "India" GROUP BY year; 
+
+$ select country, SUM(total) from olympic GROUP BY country
+
+$ select country, SUM(gold) from olympic GROUP BY country;
+
+$ select country, year, SUM(total) from olympic where sport = "Shooting" GROUP BY year
+
+$ create table movies (movie_Id INT, title STRING, genres STRING) row format delimited fields terminated by "," stored as textfile;
+
+$ load data local inpath "/home/cloudera/Desktop/ICP4/input/movies.csv" into table movies;
+
+$ create table ratings (user_Id INT, movie_Id INT, rating FLOAT, timestamp INT) row format delimited fields terminated by "," stored as textfile;
+
+$ load data local inpath "/home/cloudera/Desktop/ICP4/input/ratings.csv" into table ratings;
+
+
+$ create table users (user_Id INT, gender STRING) row format delimited fields terminated by "," stored as textfile;
+
+$ load data local inpath "/home/cloudera/Desktop/ICP4/input/users.txt" into table users;
+
+$ select title FROM movies where genres = "Action|Drama";
+
+$ select movie_Id FROM ratings WHERE rating = "5";
+
+$ select m.movie_Id, m.title, AVG(r.rating) avg_rating FROM movies as m JOIN ratings as r ON(m.movie_Id = r.movie_Id) where m.genres = "Action" GROUP BY m.movie_Id,  m.title ORDER BY avg_rating DESC limit 1
