@@ -1,0 +1,31 @@
+Task 1: 
+
+$ sudo service mysqld start
+$ mysql -u root -pcloudera
+$ create table student(stu_id INT NOT NULL AUTO_INCREMENT, stu_name VARCHAR(100), stu_cources INT, PRIMARY KEY(stu_id));
+$ insert into student values(1,"Khalid",3);
+$ insert into student values(2,"Ahmed",4);
+$ insert into student values(3,"Michael",2);
+$ sqoop import --connect jdbc:mysql://localhost/db1 --username root --password cloudera --table student --m 1
+$ hadoop fs -cat student/*
+$ create table NewStudent(stu_id INT NOT NULL AUTO_INCREMENT, stu_name VARCHAR(100), stu_cources INT, PRIMARY KEY(stu_id));
+$ sqoop export --connect jdbc:mysql://localhost/db1 --username root --password cloudera --table NewStudent --export-dir student/part-m-00000
+
+Task 2:
+
+$ hive -f tables-schemas.hql
+$ create table stu(stuid INT, stu_name STRING) row format delimited fields terminated by "," stored as textfile;
+$ load data local inpath "/home/cloudera/Desktop/data/stu.txt" into table stu;
+$ create table stuNew(stuid INT, stu_name VARCHAR(100));
+$ sqoop export --connect jdbc:mysql://localhost/db1 --username root --password cloudera --table petrolNew --export-dir /user/hive/warehouse/petrol -m 1
+$ sqoop import --connect jdbc:mysql://localhost/db1 --username root --password cloudera --table student --m 1 --hive-import --hive-table student
+
+Task 3:
+
+$ mysql> create table article(text LONGTEXT);
+$ mysql> load data local infile '/home/cloudera/Downloads/shakespeare.txt' into table article;
+$ sqoop import --connect jdbc:mysql://localhost/db1 --username root --password cloudera --table article --m 1 --hive-import --create-hive-table --hive-table New_Aarticle
+$ analyze table New_article compute statistics;
+$ SELECT word, count(1) AS count FROM (SELECT explode(split(text, '\\s')) AS word FROM New_article) w GROUP BY word ORDER BY word;
+$  select regexp_extract(text,'^([^\.]+)\.?',1) from new_article;
+$  select regexp_replace(text, "http", "link") from new_article;
