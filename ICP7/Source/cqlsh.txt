@@ -1,0 +1,22 @@
+$ create keyspace data with replication={'class':'SimpleStrategy', 'replication_factor':1};
+
+$ use data;
+$ create table data.employee (employee_id int PRIMARY KEY, department text, lastname text, year_with_company int, hiredate text, jobtitle text, salary int, managerid int);
+
+$ copy employee (employee_id, department, lastname, year_with_company, hiredate, jobtitle, salary, managerid) from '/home/Data/employee/employee_entries.csv' with DELIMITER='|' AND HEADER=TRUE;
+
+$ select * from employee;
+
+$ select employee_id, lastname, jobtitle, hiredate from employee;
+
+$ select lastname, salary from employee where jobtitle = 'manager' ALLOW FILTERING;
+
+$ select lastname, jobtitle, salary from employee where hiredate='2000-02-18' ALLOW FILTERING;
+
+$ select lastname, salary from employee;
+
+$ select lastname, salary, managerid from employee where salary=45000 ALLOW FILTERING;
+
+$ create custom index fnprefix on employee (lastname) using 'org.apache.cassandra.index.sasi.SASIIndex';
+
+$ select * from employee where lastname LIKE 'j%';
